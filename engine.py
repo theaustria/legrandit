@@ -3,7 +3,7 @@ from pygame.locals import *
 import game
 pygame.init()
 
-VERSION = "0.01"
+VERSION = "0.02"
 FPS = 40
 TITEL = "*TESTING* Legrandit %s" % VERSION
 WINDOWSIZE = (500,500)

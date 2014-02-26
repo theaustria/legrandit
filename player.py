@@ -1,11 +1,11 @@
 ﻿import pygame
 from pygame.locals import *
-from random import randint
         
-class Monster (pygame.sprite.Sprite):
+class Player (pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("redplayer.png").convert()
+        self.image = pygame.image.load("images/monster2.bmp").convert()
+        self.image = pygame.transform.scale(self.image,(25,25))
         self.rect = self.image.get_rect()
         self.dir = [0,0]
         self.velocity = 5
@@ -29,12 +29,8 @@ class Monster (pygame.sprite.Sprite):
         else:
             self.dir[0] = 0
 
-class Stone (pygame.sprite.Sprite):
-    def __init__(self,randpos=False):
-        super().__init__()
-        self.image = pygame.image.load("stone.png").convert()
-        self.rect = self.image.get_rect()
-        if randpos:
-            self.rect.topleft = (randint(0,400),randint(0,400))
-    def update():
-        pass
+    def undo(self):
+        self.rect.move_ip(-self.dir[0],-self.dir[1])
+      
+    def teleport(self,pos):
+        self.rect.topleft = pos
