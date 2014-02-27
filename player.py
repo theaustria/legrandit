@@ -2,9 +2,9 @@
 from pygame.locals import *
         
 class Player (pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, image):
         super().__init__()
-        self.image = pygame.image.load("images/monster2.bmp").convert()
+        self.image = image
         self.image = pygame.transform.scale(self.image,(25,25))
         self.rect = self.image.get_rect()
         self.dir = [0,0]
