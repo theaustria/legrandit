@@ -5,7 +5,6 @@ class Player (pygame.sprite.Sprite):
     def __init__(self, image):
         super().__init__()
         self.image = image
-        self.image = pygame.transform.scale(self.image,(25,25))
         self.rect = self.image.get_rect()
         self.dir = [0,0]
         self.velocity = 5
@@ -34,3 +33,9 @@ class Player (pygame.sprite.Sprite):
       
     def teleport(self,pos):
         self.rect.topleft = pos
+        
+    def recoil(self):
+        self.undo()
+        
+    def draw(self,screen):
+        screen.blit(self.image,self.rect)

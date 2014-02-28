@@ -3,7 +3,7 @@ from pygame.locals import *
 import game
 pygame.init()
 
-VERSION = "0.03"
+VERSION = "0.04"
 FPS = 40
 TITEL = "*TESTING* Legrandit %s" % VERSION
 WINDOWSIZE = (500,500)
@@ -27,7 +27,9 @@ class Engine(object):
         '''
         while self.running:
             keys = self.input()
-            self.game.update(keys)
+            game_alive = self.game.update(keys)
+            if not game_alive:
+                self.running = False
             self.game.draw(self.screen)
             pygame.display.update()
             self.clock.tick(FPS)

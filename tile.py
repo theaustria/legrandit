@@ -2,10 +2,19 @@
 from pygame.locals import *
         
 class Tile (pygame.sprite.Sprite):
-
-    def __init__(self, image, pos):
+    def __init__(self, images, pos):
         super().__init__()
-        self.image = image
-        self.image = pygame.transform.scale(self.image,(50,50))
+        self.images = images
+        self.image = self.images[0]
         self.rect = self.image.get_rect()
         self.rect.topleft = pos
+        self.health = 3
+    
+    def smash(self):
+        self.health -= 1
+        if self.health == 0:
+            self.kill()
+        elif self.health == 1:
+            self.image = self.images[2]
+        elif self.health == 2:
+            self.image = self.images[1]
