@@ -3,10 +3,11 @@ from pygame.locals import *
 import game
 pygame.init()
 
-VERSION = "0.04"
+VERSION = "0.05"
 FPS = 40
-TITEL = "*TESTING* Legrandit %s" % VERSION
+TITEL = "Legrandit %s" % VERSION
 WINDOWSIZE = (500,500)
+ICON = pygame.image.load("images/icon.png")
 
 class Engine(object):
     '''
@@ -15,10 +16,12 @@ class Engine(object):
     def __init__(self):
         self.running = True
         self.state = 0
+        pygame.display.set_icon(ICON)
         self.screen = pygame.display.set_mode(WINDOWSIZE)
         pygame.display.set_caption(TITEL)
         self.clock = pygame.time.Clock()
-        self.game = game.Game(WINDOWSIZE)
+        self.last_time = pygame.time.get_ticks()
+        self.game = game.Game(self.screen.get_rect())
     
     def loop(self):
         ''' run the main game loop
@@ -27,9 +30,11 @@ class Engine(object):
         '''
         while self.running:
             keys = self.input()
-            game_alive = self.game.update(keys)
-            if not game_alive:
-                self.running = False
+            current_time = pygame.time.get_ticks()
+            time_passed = current_time - self.last_time
+            self.last_time = current_time
+            game_running = self.game.update(keys,time_passed)
+            self.running = self.running and game_running
             self.game.draw(self.screen)
             pygame.display.update()
             self.clock.tick(FPS)

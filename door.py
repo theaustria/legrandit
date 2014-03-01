@@ -7,6 +7,3 @@ class Door(pygame.sprite.Sprite):
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.topleft = pos
-    
-    def draw(self,screen):
-        screen.blit(self.image,self.rect)
