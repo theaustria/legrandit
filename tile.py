@@ -10,9 +10,9 @@ class Tile (pygame.sprite.Sprite):
         self.rect.topleft = pos
         self.health = 3
     
-    def smash(self):
-        self.health -= 1
-        if self.health == 0:
+    def smash(self, damage):
+        self.health -= damage
+        if self.health <= 0:
             self.kill()
         elif self.health == 1:
             self.image = self.images["tile3"]

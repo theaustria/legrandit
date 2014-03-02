@@ -9,6 +9,9 @@ class Player (pygame.sprite.Sprite):
         self.dir = [0,0]
         self.velocity = 5
         self.range = 25
+        self.damage = 1
+        self.health = 5
+        self.money = 0
         self.cooldown = 300
         self.cooldowntime = 0
         self.attack_rect = AttackRect()

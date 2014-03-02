@@ -3,10 +3,11 @@ from pygame.locals import *
 import game
 pygame.init()
 
-VERSION = "0.06"
+VERSION = "0.10"
 FPS = 40
 TITEL = "Legrandit %s" % VERSION
-WINDOWSIZE = (500,500)
+SCREEN = pygame.Rect(0,0,500,500)
+WINDOWSIZE = (SCREEN.width,SCREEN.height+25)
 ICON = pygame.image.load("images/icon.png")
 
 class Engine(object):
@@ -21,7 +22,7 @@ class Engine(object):
         pygame.display.set_caption(TITEL)
         self.clock = pygame.time.Clock()
         self.last_time = pygame.time.get_ticks()
-        self.game = game.Game(self.screen.get_rect())
+        self.game = game.Game(SCREEN)
     
     def loop(self):
         ''' run the main game loop
@@ -30,10 +31,7 @@ class Engine(object):
         '''
         while self.running:
             keys = self.input()
-            current_time = pygame.time.get_ticks()
-            time_passed = current_time - self.last_time
-            self.last_time = current_time
-            game_running = self.game.update(keys,time_passed)
+            game_running = self.game.update(keys,self.get_passed_time())
             self.running = self.running and game_running
             self.game.draw(self.screen)
             pygame.display.update()
@@ -56,3 +54,9 @@ class Engine(object):
                 if event.key == K_ESCAPE:
                     self.running = False
         return pygame.key.get_pressed()
+        
+    def get_passed_time(self):
+        current_time = pygame.time.get_ticks()
+        time_passed = current_time - self.last_time
+        self.last_time = current_time
+        return time_passed
