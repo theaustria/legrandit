@@ -17,7 +17,7 @@ class Game(object):
         # teleport player to starting position
         self.player.teleport((200,200))
         # create starting level
-        self.floor = Floor(self.images)
+        self.floor = Floor(self.images,screen_rect)
 
         self.running = True
 
@@ -28,33 +28,21 @@ class Game(object):
         
         Updates all game objects, checks for collisions. Returns alive status.
         '''
-        # move player with keyboard input
-        wasd = (keys[K_w], keys[K_a], keys[K_s], keys[K_d])
-        if keys[K_UP] or keys[K_LEFT] or keys[K_DOWN] or keys[K_RIGHT]:
-            arrowkeys = (keys[K_UP],keys[K_LEFT],keys[K_DOWN],keys[K_RIGHT])
-            self.player.attack(arrowkeys)
-        self.player.set_dir(wasd)
-        self.player.update(time_passed)
-        #### debugging ####
+        # update player with keyboard input and passed time
+        self.player.update(keys,time_passed)
+        # handle collisions
+        self.floor.collide(self.player)
+        # interact with objects
+        if keys[K_SPACE]:
+            self.floor.interact(self.player)
+        
+        #### debugging / cheating ####
         if keys[K_n]:
             self.floor.next()
-        # detect collisions with walls, edge of screen
-        edge = not self.screen_rect.contains(self.player.rect)
-        tile_collisions = pygame.sprite.spritecollide(self.player,self.floor.tiles,False)
-        attack_collisions = pygame.sprite.spritecollide(self.player.attack_rect,self.floor.tiles,False)
-        # something door
-        door = False
-        # smash the tiles
-        for tile in attack_collisions:
-            tile.smash()
-            #self.player.recoil()
-        # if colliding, move the player back to it's former position
-        if tile_collisions or edge:
-            self.player.undo()
-        # if player stands completely on trapdoor, next level
-        if door:
-            self.floor.next()
-            self.player.teleport((200,200))
+        if keys[K_m]:
+            self.floor.tiles.empty()
+        if keys[K_COMMA]:
+            print(self.floor.level)
             
         return self.running
         
@@ -66,7 +54,6 @@ class Game(object):
         # fill screen with background surface
         screen.blit(self.images["bg"],(0,0))
         # draw objects in right order
-        #self.door.draw(screen)
         self.floor.interacts.draw(screen)
         self.floor.tiles.draw(screen)
         self.player.draw(screen)

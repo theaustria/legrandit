@@ -9,12 +9,21 @@ class Player (pygame.sprite.Sprite):
         self.dir = [0,0]
         self.velocity = 5
         self.range = 25
-        self.cooldown = 0
+        self.cooldown = 300
+        self.cooldowntime = 0
         self.attack_rect = AttackRect()
         
-    def update(self,time_passed):
+    def update(self,keys,time_passed):
+        # set the player's attack rect
+        arrowkeys = (keys[K_UP],keys[K_LEFT],keys[K_DOWN],keys[K_RIGHT])
+        self.attack(arrowkeys)
+        # set the player's direction
+        wasd = (keys[K_w], keys[K_a], keys[K_s], keys[K_d])
+        self.set_dir(wasd)
+        # move the player
         self.rect.move_ip(self.dir)
-        self.cooldown -= time_passed
+        # reduce cooldowntime
+        self.cooldowntime -= time_passed
         
     def set_dir(self,wasd):
         if wasd[0] != wasd[2]:
@@ -47,19 +56,20 @@ class Player (pygame.sprite.Sprite):
         
     def attack(self,keys):
         self.attack_rect.rect = self.rect.copy()
-        if not self.cooldown > 0:
-            if keys[0] != keys[2]:
-                if keys[0]:
-                    self.attack_rect.rect.top -= self.range
-                else:
-                    self.attack_rect.rect.bottom += self.range
-            if keys[1] != keys[3]:
-                if keys[1]:
-                    self.attack_rect.rect.left -= self.range
-                else:
-                    self.attack_rect.rect.right += self.range
-            
-            self.cooldown = 500
+        if [True for key in keys if key]:
+            if not self.cooldowntime > 0:
+                if keys[0] != keys[2]:
+                    if keys[0]:
+                        self.attack_rect.rect.top -= self.range
+                    else:
+                        self.attack_rect.rect.bottom += self.range
+                if keys[1] != keys[3]:
+                    if keys[1]:
+                        self.attack_rect.rect.left -= self.range
+                    else:
+                        self.attack_rect.rect.right += self.range
+                
+                self.cooldowntime = self.cooldown
             
 class AttackRect(pygame.sprite.Sprite):
     def __init__(self):
